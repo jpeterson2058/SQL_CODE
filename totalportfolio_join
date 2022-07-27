@@ -1,0 +1,10 @@
+insert into FINANCE.totalportfolio
+select Finance.datamodel_liquidasset.ASSETYEAR,FINANCE.datamodel_liquidasset.ASSETQUARTER,FINANCE.portfolio_positions.Account_Name,FINANCE.datamodel_liquidasset.OWNER,FINANCE.datamodel_liquidasset.ASSETTYPE,FINANCE.datamodel_liquidasset.EXPENSERATIO,
+FINANCE.datamodel_liquidasset.ASSETCLASS,FINANCE.datamodel_liquidasset.SECTOR,FINANCE.datamodel_liquidasset.BROADTHEME,FINANCE.datamodel_liquidasset.MSCIESGRATE,FINANCE.datamodel_liquidasset.MSCIWTAVGCARBONINTENSITY,FINANCE.datamodel_liquidasset.SUSTAINSCORE,
+FINANCE.portfolio_positions.Description,FINANCE.portfolio_positions.Symbol,FINANCE.portfolio_positions.Quantity,FINANCE.asset_file_r.ret2008,FINANCE.asset_file_r.ret2009,FINANCE.asset_file_r.ret2010,FINANCE.asset_file_r.ret2011,
+FINANCE.asset_file_r.ret2012,FINANCE.asset_file_r.ret2013,FINANCE.asset_file_r.ret2014,FINANCE.asset_file_r.ret2015,FINANCE.asset_file_r.ret2016,FINANCE.asset_file_r.ret2017,FINANCE.asset_file_r.ret2018,FINANCE.asset_file_r.ret2019,FINANCE.asset_file_r.ret2020,
+FINANCE.asset_file_r.ret2021,FINANCE.asset_file_r.currRet,FINANCE.asset_file_r.perRet,FINANCE.asset_file_r.minRet,FINANCE.asset_file_r.maxRet,FINANCE.asset_file_r.min95,FINANCE.asset_file_r.max95,FINANCE.asset_file_r.div,FINANCE.asset_file_r.divYield,FINANCE.asset_file_r.stdev,
+FINANCE.asset_file_r.sharpe,FINANCE.asset_file_r.beta,FINANCE.asset_file_r.sortino,FINANCE.asset_file_r.treynor
+FROM FINANCE.portfolio_positions
+inner join FINANCE.asset_file_r on FINANCE.portfolio_positions.assetNumber=FINANCE.asset_file_r.assetNumber
+inner join FINANCE.datamodel_liquidasset on FINANCE.portfolio_positions.assetNumber=FINANCE.datamodel_liquidasset.assetNumber;
