@@ -1,0 +1,77 @@
+# set up the time dimension table
+CREATE TABLE FINANCE_TRANSACTIONS.DimDate (
+  `Date` 		date 	 NOT NULL,
+  `Day` 	 	smallint DEFAULT NULL,
+  `DayName` 	char(10) DEFAULT NULL,
+  `Month` 	 	smallint DEFAULT NULL,
+  `MonthName`  	char(10) DEFAULT NULL,
+  `Week` 	 	smallint DEFAULT NULL,
+  `DayWeek` 	smallint DEFAULT NULL,
+  `Quarter` 	smallint DEFAULT NULL,
+  `Year` 	 	smallint DEFAULT NULL,
+  `CreatedDate`	date	 DEFAULT NULL,
+  `UpdatedDate`	date	 DEFAULT NULL,
+
+  PRIMARY KEY (`Date`)
+);
+
+use FINANCE_TRANSACTIONS;
+
+drop procedure if exists SP_DateDim;
+
+truncate table DimDate;
+
+delimiter //
+
+CREATE PROCEDURE SP_DateDim (in p_start_date date, p_end_date date)
+BEGIN
+
+  Declare StartDate date;
+  Declare EndDate date;
+  Declare RunDate date;
+
+-- Set date variables
+
+  Set StartDate = p_start_date; -- update this value to reflect the earliest date that you will use.
+  Set EndDate = p_end_date; -- update this value to reflect the latest date that you will use.
+  Set RunDate = StartDate;
+
+-- Loop through each date and insert into DimTime table
+
+WHILE RunDate <= EndDate DO
+
+INSERT Into DimDate(
+ Date,
+ Day,
+ DayName,
+ Month,
+ MonthName,
+ Week,
+ DayWeek,
+ Quarter,
+ Year,
+ CreatedDate, 
+ UpdatedDate 
+)
+select 
+RunDate date,
+day(RunDate) Day,
+DAYNAME(RunDate) DayName,
+MONTH(RunDate) Month,
+MONTHNAME(RunDate) MonthName,
+WEEK(RunDate) Week,
+DAYOFWEEK(RunDate) DayWeek,
+QUARTER(RunDate) Quarter,
+YEAR(RunDate) Year,
+now() CreatedDate,
+now() UpdatedDate
+;
+-- commit;
+-- increase the value of the @date variable by 1 day
+
+Set RunDate = ADDDATE(RunDate,1);
+
+END WHILE;
+commit;
+END;
+//call FINANCE_TRANSACTIONS.SP_DateDim('2019-01-01', '2030-12-31')
